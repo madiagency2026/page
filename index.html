@@ -696,18 +696,18 @@ tailwind.config = {
 
       <!-- Right: Form -->
       <div class="lg:col-span-7 reveal delay-2">
-        <form id="contactForm" class="space-y-8 bg-surface-container-high p-8 md:p-12" onsubmit="submitForm(event)">
+        <form id="contactForm" class="space-y-8 bg-surface-container-high p-8 md:p-12" onsubmit="submitForm(event)" action="https://formspree.io/f/xzdozojj" method="POST">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <div class="form-field">
                 <label class="form-label">Nom complet *</label>
-                <input id="f-name" type="text" class="form-input" placeholder="Jean Dupont" required/>
+                <input id="f-name" name="name" type="text" class="form-input" placeholder="Jean Dupont" required/>
               </div>
             </div>
             <div>
               <div class="form-field">
                 <label class="form-label">Email *</label>
-                <input id="f-email" type="email" class="form-input" placeholder="jean@agence.de" required/>
+                <input id="f-email" name="email" type="email" class="form-input" placeholder="jean@agence.de" required/>
               </div>
             </div>
           </div>
@@ -716,7 +716,7 @@ tailwind.config = {
             <div>
               <div class="form-field">
                 <label class="form-label">Formule souhaitée</label>
-                <select id="f-plan" class="form-input">
+                <select id="f-plan" name="plan" class="form-input">
                   <option value="">Choisir...</option>
                   <option value="Standard">Standard — €1.500</option>
                   <option value="Gold">Gold — €3.200 ✦</option>
@@ -728,7 +728,7 @@ tailwind.config = {
             <div>
               <div class="form-field">
                 <label class="form-label">Type d'événement</label>
-                <select id="f-type" class="form-input">
+                <select id="f-type" name="eventType" class="form-input">
                   <option value="">Sélectionner...</option>
                   <option>Automotive Launch</option>
                   <option>Corporate / Summit</option>
@@ -743,14 +743,14 @@ tailwind.config = {
           <div>
             <div class="form-field">
               <label class="form-label">Date de l'événement</label>
-              <input id="f-date" type="date" class="form-input"/>
+              <input id="f-date" name="eventDate" type="date" class="form-input"/>
             </div>
           </div>
 
           <div>
             <div class="form-field">
               <label class="form-label">Votre vision & besoins spécifiques</label>
-              <textarea id="f-msg" rows="4" class="form-input resize-none" placeholder="Décrivez l'énergie, les attentes, la plateforme de diffusion..."></textarea>
+              <textarea id="f-msg" name="message" rows="4" class="form-input resize-none" placeholder="Décrivez l'énergie, les attentes, la plateforme de diffusion..."></textarea>
             </div>
           </div>
 
@@ -903,16 +903,32 @@ function scrollContact(plan){
 }
 
 // Form submit
-function submitForm(e){
+async function submitForm(e){
   e.preventDefault();
-  const btn=e.target.querySelector('button[type=submit]');
+  const form=e.target;
+  const btn=form.querySelector('button[type=submit]');
+  const success=document.getElementById('form-success');
   btn.disabled=true;
+  success.classList.add('hidden');
   btn.innerHTML='<span>Envoi en cours...</span>';
-  setTimeout(()=>{
-    document.getElementById('form-success').classList.remove('hidden');
-    btn.innerHTML='<span>Envoyé ✓</span>';
-    e.target.reset();
-  },1200);
+
+  try{
+    const response=await fetch(form.action,{method:form.method,body:new FormData(form),headers:{Accept:'application/json'}});
+    if(response.ok){
+      success.textContent='✓ Message envoyé avec succès ! Nous revenons vers vous sous 24h.';
+      success.classList.remove('hidden');
+      btn.innerHTML='<span>Envoyé ✓</span>';
+      form.reset();
+      return;
+    }
+
+    throw new Error('Formspree a refusé la soumission.');
+  }catch(error){
+    btn.disabled=false;
+    btn.innerHTML='<span>Envoyer la demande</span><span class="material-symbols-outlined text-lg">arrow_forward</span>';
+    success.textContent='Une erreur est survenue. Veuillez réessayer dans un instant.';
+    success.classList.remove('hidden');
+  }
 }
 </script>
 </body>
