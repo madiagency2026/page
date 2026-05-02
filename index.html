@@ -104,16 +104,12 @@ tailwind.config = {
   /* FORM */
   .form-field{border-bottom:1px solid rgba(255,255,255,.15);transition:border-color .3s;}
   .form-field:focus-within{border-color:var(--red);}
-  .form-input{background:#1f1f1f;border:1px solid rgba(255,255,255,.08);border-radius:0;outline:none;width:100%;color:#f4f4f4;padding:14px 16px;font-family:'Manrope',sans-serif;font-size:14px;line-height:1.4;-webkit-text-fill-color:#f4f4f4;box-shadow:none;appearance:none;}
-  .form-input::placeholder{color:#8a8f93;opacity:1;}
-  .form-input:focus{border-color:rgba(227,6,19,.85);box-shadow:0 0 0 1px rgba(227,6,19,.2);}
-  .form-input:-webkit-autofill,
-  .form-input:-webkit-autofill:hover,
-  .form-input:-webkit-autofill:focus,
-  .form-input:-webkit-autofill:active{box-shadow:0 0 0 1000px #1f1f1f inset;-webkit-text-fill-color:#f4f4f4;caret-color:#f4f4f4;}
+  .form-input{background:transparent;border:none;outline:none;width:100%;color:#1a1a1a;padding:12px 0;font-family:'Manrope',sans-serif;font-size:14px;-webkit-text-fill-color:#1a1a1a;}
+  .form-input::placeholder{color:#999;}
+  .form-input:focus::placeholder{color:#bbb;}
   .form-label{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#666;display:block;margin-bottom:4px;}
-  select.form-input option{background:#1f1f1f;color:#f4f4f4;}
-  input[type="date"].form-input{color-scheme:dark;}
+  select.form-input option{background:#fff;color:#1a1a1a;}
+  input[type="date"].form-input{color-scheme:light;}
 
   /* MOBILE MENU */
   #mobile-menu{display:none;}
